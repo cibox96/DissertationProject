@@ -68,6 +68,14 @@ SamplerState PointClamp
 	AddressV = Clamp;
 };
 
+// Forward+
+
+struct Plane
+{
+	float3 N;
+	float d;
+};
+
 
 //--------------------------------------------------------------------------------------
 // Forward Rendering and Common Structures
@@ -280,7 +288,7 @@ float4 PS_PointLight(PS_POINTLIGHT_INPUT pIn) : SV_Target
 	// If the intensity is 0 (because the pixel is far away) then immediately discard to save further processing (try commenting out the discard line to see the performance effect)
 	float3 LightVec = pIn.LightPosition - WorldPosition;
 	float LightIntensity = saturate(1.0f - length(LightVec) / pIn.LightRadius);
-	if (LightIntensity == 0.0f) discard;
+	//if (LightIntensity == 0.0f) discard;
 
 	// Get the texture diffuse colour and normal for this pixel from the g-buffer
 	float4 DiffuseSpecular = GBuff_DiffuseSpecular.Sample(PointClamp, uv);
@@ -301,8 +309,8 @@ float4 PS_PointLight(PS_POINTLIGHT_INPUT pIn) : SV_Target
 	combinedColour.rgb = DiffuseSpecular.rgb * DiffuseLight + DiffuseSpecular.a * SpecularLight;
 	combinedColour.a = 1.0f;
 
-	return combinedColour;
-	//return combinedColour + ((LightIntensity == 0.0f) ? float4(0.1,0,0,0) : float4(0,0.1,0,0)); // Comment this line in, and comment out the line above and the earlier "discard" line
+	//return combinedColour;
+	return combinedColour + ((LightIntensity == 0.0f) ? float4(0.1,0,0,0) : float4(0,0.1,0,0)); // Comment this line in, and comment out the line above and the earlier "discard" line
 	// to see the quad rendered for each light and the actual pixels that are affected by it
 }
 
@@ -440,6 +448,16 @@ float4 PS_LightParticles(PS_LIGHTPARTICLE_INPUT pIn) : SV_Target
 	// Tint texture with colour of the light
 	float3 diffuse = DiffuseMap.Sample(TrilinearWrap, pIn.UV) * pIn.LightColour;
 	return float4(diffuse, 0.0f);
+}
+
+// Forward+
+float4 ClipToView(float4 clip)
+{
+	float4 view = mul()
+}
+float3 ComputePlane()
+{
+
 }
 
 
