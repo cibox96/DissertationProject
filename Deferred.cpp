@@ -137,6 +137,9 @@ ID3DX11EffectVectorVariable* CameraPosVar = NULL;
 ID3DX11EffectScalarVariable* CameraNearClipVar = NULL;
 ID3DX11EffectVectorVariable* AmbientColourVar = NULL;
 
+//Forward+ variables
+ID3DX11EffectVectorVariable* RWStructuredBufferVar = NULL;
+
 
 //--------------------------------------------------------------------------------------
 // DirectX Variables
@@ -387,6 +390,8 @@ bool LoadEffectFile()
 	CameraNearClipVar = Effect->GetVariableByName("CameraNearClip")->AsScalar();
 	AmbientColourVar = Effect->GetVariableByName("AmbientColour")->AsVector();
 
+	// Forward+
+	RWStructuredBufferVar = Effect->GetVariableByName("RWStructuredBuffer")->AsVector();
 	return true;
 }
 
@@ -514,7 +519,7 @@ void UpdateScene(float frameTime)
 	outText << "Lights: " << NumPointLights;
 	if (AverageFrameTime >= 0.0f)
 	{
-		outText << ", Frame Time: " << AverageFrameTime * 1000.0f << "ms, FPS:" << 1.0f / AverageFrameTime; 
+		outText << ", Frame Time: " << AverageFrameTime * 1000.0f << "ms, FPS:" << 1.0f / AverageFrameTime << " ::: " << g_ViewportHeight << " : " << g_ViewportWidth;
 		SetWindowText(HWnd, CA2CT(outText.str().c_str()));
 		outText.str("");
 	}
